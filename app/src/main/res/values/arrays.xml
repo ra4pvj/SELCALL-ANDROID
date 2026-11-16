@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="src_names">
+        <item>Распознавание речи (без АРУ)</item>
+        <item>Необработанный (UNPROCESSED)</item>
+        <item>Микрофон</item>
+        <item>Видеокамера</item>
+    </string-array>
+    <string-array name="src_values">
+        <item>voice_recognition</item>
+        <item>unprocessed</item>
+        <item>mic</item>
+        <item>camcorder</item>
+    </string-array>
+    <string-array name="ring_names">
+        <item>Двухтональный</item>
+        <item>Трель</item>
+        <item>Короткие гудки</item>
+        <item>Мелодия «Калинка»</item>
+    </string-array>
+    <string-array name="ring_values">
+        <item>codan</item>
+        <item>vertex</item>
+        <item>beep</item>
+        <item>kalinka</item>
+    </string-array>
+    <string-array name="ptt_names">
+        <item>нет (VOX / внешний PTT)</item>
+        <item>RTS</item>
+        <item>DTR</item>
+        <item>RTS + DTR</item>
+        <item>ICOM (CI-V)</item>
+        <item>YAESU (TX1;/TX0;)</item>
+        <item>YAESU-OLD (FT-817/857/897)</item>
+        <item>KENWOOD (TX;/RX;)</item>
+        <item>ELECRAFT (TX;/RX;)</item>
+    </string-array>
+    <string-array name="ptt_values">
+        <item>none</item>
+        <item>RTS</item>
+        <item>DTR</item>
+        <item>RTS+DTR</item>
+        <item>ICOM</item>
+        <item>YAESU</item>
+        <item>YAESU-OLD</item>
+        <item>KENWOOD</item>
+        <item>ELECRAFT</item>
+    </string-array>
+    <string-array name="bauds">
+        <item>1200</item>
+        <item>4800</item>
+        <item>9600</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>115200</item>
+    </string-array>
+    <string-array name="kenwood">
+        <item>TX;</item>
+        <item>TX0;</item>
+        <item>TX1;</item>
+    </string-array>
+</resources>

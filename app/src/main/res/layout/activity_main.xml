@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:padding="6dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/lamp_rx" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text=" RX " android:textColor="#FFFFFF" android:textStyle="bold" android:padding="4dp"
+            android:background="#555555" />
+        <TextView android:id="@+id/lamp_tx" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp" android:text=" TX " android:textColor="#FFFFFF" android:textStyle="bold"
+            android:padding="4dp" android:background="#555555" />
+        <TextView android:id="@+id/status" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:layout_marginLeft="8dp" android:textSize="13sp" />
+    </LinearLayout>
+
+    <ProgressBar android:id="@+id/meter" style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="4dp"
+        android:max="100" />
+
+    <LinearLayout android:id="@+id/banner" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:background="#FFF3C4" android:padding="8dp"
+        android:layout_marginTop="6dp" android:visibility="gone">
+        <TextView android:id="@+id/banner_text" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textSize="18sp" android:textStyle="bold"
+            android:textColor="#000000" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button android:id="@+id/btn_answer" android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:text="Ответить" />
+            <Button android:id="@+id/btn_dismiss" android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:text="Сбросить" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView android:id="@+id/log" android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:transcriptMode="normal" android:stackFromBottom="true" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <EditText android:id="@+id/to_id" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:hint="Кому (ID)" android:inputType="number"
+            android:maxLength="10" />
+        <Button android:id="@+id/btn_call" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Вызов" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <EditText android:id="@+id/msg" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:hint="Текст сообщения (до 64)"
+            android:inputType="textCapCharacters" android:imeOptions="actionSend" />
+        <Button android:id="@+id/btn_send" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Отправить" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button android:id="@+id/btn_rx" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:text="Приём" />
+        <Button android:id="@+id/btn_stop_tx" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:text="Стоп TX" android:enabled="false" />
+    </LinearLayout>
+</LinearLayout>

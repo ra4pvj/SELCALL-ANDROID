@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Станция">
+        <EditTextPreference android:key="my_id" android:title="Мой ID" android:defaultValue="1234"
+            android:inputType="number" android:maxLength="10" />
+        <EditTextPreference android:key="dot_seconds" android:title="Длина преамбулы (точки), с"
+            android:defaultValue="6" android:inputType="numberDecimal"
+            android:dialogMessage="Для станций в режиме сканирования — не меньше цикла сканирования, обычно 6–12 с" />
+        <EditTextPreference android:key="tx_level" android:title="Уровень передачи (0,01–1)"
+            android:defaultValue="0.5" android:inputType="numberDecimal" />
+        <CheckBoxPreference android:key="translit" android:title="Транслитерация кириллицы"
+            android:summary="Русский текст передаётся латиницей" android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Звук">
+        <ListPreference android:key="in_dev" android:title="Вход" android:defaultValue="0" />
+        <ListPreference android:key="audio_source" android:title="Источник входа"
+            android:entries="@array/src_names" android:entryValues="@array/src_values"
+            android:defaultValue="voice_recognition" />
+        <ListPreference android:key="out_dev" android:title="Выход" android:defaultValue="0" />
+        <CheckBoxPreference android:key="mute_rx_on_tx" android:title="Пауза приёма на время передачи"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Приём">
+        <CheckBoxPreference android:key="afc" android:disableDependentsState="true" android:title="АПЧ (поиск сигнала 1000–2600 Гц, USB/LSB)"
+            android:defaultValue="true" />
+        <EditTextPreference android:key="fixed_center" android:title="Центр без АПЧ, Гц"
+            android:defaultValue="1785" android:inputType="numberDecimal" android:dependency="afc"
+            android:shouldDisableView="true" />
+        <CheckBoxPreference android:key="show_all" android:title="Показывать все вызовы"
+            android:summary="Иначе — только на мой ID" android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Звонок при вызове на мой ID">
+        <CheckBoxPreference android:key="ring" android:title="Звонок" android:defaultValue="true" />
+        <ListPreference android:key="ring_style" android:title="Сигнал звонка"
+            android:entries="@array/ring_names" android:entryValues="@array/ring_values" android:defaultValue="codan" />
+        <EditTextPreference android:key="ring_volume" android:title="Громкость звонка (0,01–1)"
+            android:defaultValue="0.5" android:inputType="numberDecimal" />
+        <EditTextPreference android:key="ring_seconds" android:title="Длительность звонка, с"
+            android:defaultValue="30" android:inputType="numberDecimal" />
+        <CheckBoxPreference android:key="vibrate" android:title="Вибрация" android:defaultValue="true" />
+        <CheckBoxPreference android:key="ring_air" android:title="Ответ в эфир"
+            android:summary="Через 1 с после вызова передаётся сигнал ответа — вызывающая станция слышит, что вызов принят"
+            android:defaultValue="true" />
+        <ListPreference android:key="answer_style" android:title="Сигнал ответа в эфир"
+            android:entries="@array/ring_names" android:entryValues="@array/ring_values" android:defaultValue="kalinka" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Управление передачей (PTT / CAT)">
+        <ListPreference android:key="ptt_method" android:title="Способ"
+            android:entries="@array/ptt_names" android:entryValues="@array/ptt_values" android:defaultValue="none" />
+        <ListPreference android:key="ptt_port" android:title="USB-COM порт" />
+        <ListPreference android:key="ptt_baud" android:title="Скорость порта"
+            android:entries="@array/bauds" android:entryValues="@array/bauds" android:defaultValue="9600" />
+        <CheckBoxPreference android:key="ptt_invert" android:title="Инверсия RTS/DTR" android:defaultValue="false" />
+        <EditTextPreference android:key="ptt_icom_addr" android:title="Адрес CI-V (hex)"
+            android:defaultValue="94" android:dialogMessage="IC-7300: 94, IC-7300MK2: B6, IC-705: A4, IC-7610: 98, IC-7100: 88, IC-718: 5E, IC-7200: 76, IC-7000: 70" />
+        <ListPreference android:key="ptt_kenwood" android:title="Команда KENWOOD"
+            android:entries="@array/kenwood" android:entryValues="@array/kenwood" android:defaultValue="TX;" />
+        <EditTextPreference android:key="ptt_delay" android:title="Задержка PTT/VOX → сигнал, с"
+            android:defaultValue="0.5" android:inputType="numberDecimal" />
+        <EditTextPreference android:key="ptt_tail" android:title="Хвост после сигнала, с"
+            android:defaultValue="0.3" android:inputType="numberDecimal" />
+    </PreferenceCategory>
+</PreferenceScreen>

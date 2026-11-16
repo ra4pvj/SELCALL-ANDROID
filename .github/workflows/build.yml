@@ -1,0 +1,91 @@
+name: Build APK and release
+
+# main  -> пересобирается пре-релиз "latest"; если в VERSION номер, для которого ещё нет релиза,
+#          создаётся тег vX.Y.Z и постоянный релиз (поднять версию = поменять VERSION)
+# тег v* -> постоянный релиз с этим номером
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Signing key from secrets (if set)
+        env:
+          KS: ${{ secrets.SIGNING_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KS" ]; then
+            echo "$KS" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "SIGNING_KEYSTORE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+            echo "SIGNING_STORE_PASSWORD=${{ secrets.SIGNING_STORE_PASSWORD }}" >> "$GITHUB_ENV"
+            echo "SIGNING_KEY_ALIAS=${{ secrets.SIGNING_KEY_ALIAS }}" >> "$GITHUB_ENV"
+            echo "SIGNING_KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Codec self-test (unit tests)
+        run: ./gradlew --no-daemon testReleaseUnitTest
+
+      - name: Build APK
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Package
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/release/app-release.apk out/HFSelcall-Android.apk
+          ls -la out
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: apk
+          path: out/*
+          if-no-files-found: error
+
+  release:
+    needs: apk
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: apk
+          path: dist
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          NOTES="Сборка ${GITHUB_SHA::7}.
+
+          **Android 8.0+**: скачайте HFSelcall-Android.apk на телефон и установите (разрешите установку из этого источника). Звук — через USB-аудиоинтерфейс трансивера (Digirig и т.п.) или гарнитурный разъём; PTT — VOX или USB-COM (CP210x, FTDI, CH340, PL2303)."
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+            gh release create "$TAG" dist/* -R "$REPO" --title "HF Selcall Android $TAG" --notes "$NOTES"
+          else
+            gh release delete latest -R "$REPO" --yes --cleanup-tag || true
+            gh release create latest dist/* -R "$REPO" --target "$GITHUB_SHA" --prerelease \
+              --title "HF Selcall Android (последняя сборка ${GITHUB_SHA::7})" --notes "$NOTES"
+            TAG="v$(tr -d ' \r\n' < VERSION)"
+            if ! gh release view "$TAG" -R "$REPO" >/dev/null 2>&1; then
+              gh release create "$TAG" dist/* -R "$REPO" --target "$GITHUB_SHA" --latest \
+                --title "HF Selcall Android $TAG" --notes "$NOTES"
+            fi
+          fi

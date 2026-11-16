@@ -1,0 +1,58 @@
+plugins {
+    id 'com.android.application'
+}
+
+def versionFile = rootProject.file('VERSION')
+def appVersion = versionFile.exists() ? versionFile.text.trim() : '0.1.0'
+def parts = appVersion.tokenize('.').collect { it.isInteger() ? it.toInteger() : 0 }
+while (parts.size() < 3) parts << 0
+def ciBuild = (System.getenv('GITHUB_RUN_NUMBER') ?: '0')
+
+android {
+    namespace 'ru.ra4pvj.selcall'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'ru.ra4pvj.selcall'
+        minSdk 26
+        targetSdk 34
+        versionCode parts[0] * 10000 + parts[1] * 100 + parts[2]
+        versionName appVersion + (ciBuild != '0' ? "+$ciBuild" : '')
+    }
+
+    signingConfigs {
+        release {
+            // ключ подписи: из секретов GitHub (SIGNING_KEYSTORE_B64 и т.д.) или ключ из репозитория
+            storeFile file(System.getenv('SIGNING_KEYSTORE') ?: 'release.jks')
+            storePassword System.getenv('SIGNING_STORE_PASSWORD') ?: 'hfselcall'
+            keyAlias System.getenv('SIGNING_KEY_ALIAS') ?: 'hfselcall'
+            keyPassword System.getenv('SIGNING_KEY_PASSWORD') ?: 'hfselcall'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation 'com.github.mik3y:usb-serial-for-android:3.8.1'
+    testImplementation 'junit:junit:4.13.2'
+}
